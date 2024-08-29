@@ -6,7 +6,7 @@ using Model;
 using Model.Config;
 using UnityEngine;
 using Utilities;
-//hello im Fedya
+//hello
 
 namespace Controller
 {
