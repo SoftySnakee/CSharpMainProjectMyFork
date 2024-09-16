@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Model.Runtime.Projectiles;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 namespace UnitBrains.Player
 {
@@ -38,7 +39,7 @@ namespace UnitBrains.Player
 
 
             
-            Debug.Log(GetTemperature());
+            //Debug.Log(GetTemperature());
             ///////////////////////////////////////
         }
 
@@ -53,11 +54,31 @@ namespace UnitBrains.Player
             // Homework 1.4 (1st block, 4rd module)
             ///////////////////////////////////////
             List<Vector2Int> result = GetReachableTargets();
+            float enemy = float.MaxValue;
+            Vector2Int enemy2;
+
+            foreach (var target in result)
+            {
+                
+                if (enemy < DistanceToOwnBase(target)) 
+                    enemy2 = target;
+
+                result.Clear();
+                result.Add(target);
+                Debug.Log(target);
+
+                return result;
+
+
+            }
+            
             while (result.Count > 1)
             {
                 result.RemoveAt(result.Count - 1);
+
             }
             return result;
+
             ///////////////////////////////////////
         }
 
