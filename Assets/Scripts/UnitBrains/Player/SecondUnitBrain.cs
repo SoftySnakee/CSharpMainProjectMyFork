@@ -54,27 +54,63 @@ namespace UnitBrains.Player
             // Homework 1.4 (1st block, 4rd module)
             ///////////////////////////////////////
             List<Vector2Int> result = GetReachableTargets();
-            float enemy = float.MaxValue;
-            Vector2Int enemy2;
 
-            foreach (var target in result)
-            {
-                
-                if (enemy < DistanceToOwnBase(target)) 
-                    enemy2 = target;
-
-                result.Clear();
-                result.Add(target);
-                Debug.Log(target);
-
-                return result;
-
-
-            }
+            //Vector2Int enemy2 = Vector2Int.zero;
+            //float enemy = float.MaxValue;
             
+            
+            //foreach (var i in result)
+            //{
+            //    var temp = DistanceToOwnBase(i);
+            //    if (temp < enemy) 
+            //    {
+            //        enemy = temp;
+            //        enemy2 = i;
+                    
+
+            //    }
+
+            //}
+            //result.Clear();
+            
+
+
+            //if (enemy != float.MaxValue)
+            //{
+            //    result.Add(enemy2);
+            //    Debug.Log(enemy2);
+            //}
+            
+
+
             while (result.Count > 1)
             {
                 result.RemoveAt(result.Count - 1);
+                Vector2Int enemy2 = Vector2Int.zero;
+                float enemy = float.MaxValue;
+
+
+                foreach (var i in result)
+                {
+                    var temp = DistanceToOwnBase(i);
+                    if (temp < enemy)
+                    {
+                        enemy = temp;
+                        enemy2 = i;
+
+
+                    }
+
+                }
+                result.Clear();
+
+
+
+                if (enemy != float.MaxValue)
+                {
+                    result.Add(enemy2);
+                    Debug.Log(enemy2);
+                }
 
             }
             return result;
