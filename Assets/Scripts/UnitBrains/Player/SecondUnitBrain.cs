@@ -55,64 +55,29 @@ namespace UnitBrains.Player
             ///////////////////////////////////////
             List<Vector2Int> result = GetReachableTargets();
 
-            //Vector2Int enemy2 = Vector2Int.zero;
-            //float enemy = float.MaxValue;
-            
-            
-            //foreach (var i in result)
-            //{
-            //    var temp = DistanceToOwnBase(i);
-            //    if (temp < enemy) 
-            //    {
-            //        enemy = temp;
-            //        enemy2 = i;
-                    
+            Vector2Int enemy2 = Vector2Int.zero;
+            float enemy = float.MaxValue;
 
-            //    }
-
-            //}
-            //result.Clear();
-            
-
-
-            //if (enemy != float.MaxValue)
-            //{
-            //    result.Add(enemy2);
-            //    Debug.Log(enemy2);
-            //}
-            
-
-
-            while (result.Count > 1)
+            foreach (var i in result)
             {
-                result.RemoveAt(result.Count - 1);
-                Vector2Int enemy2 = Vector2Int.zero;
-                float enemy = float.MaxValue;
-
-
-                foreach (var i in result)
+                var temp = DistanceToOwnBase(i);
+                if (temp < enemy)
                 {
-                    var temp = DistanceToOwnBase(i);
-                    if (temp < enemy)
-                    {
-                        enemy = temp;
-                        enemy2 = i;
+                    enemy = temp;
+                    enemy2 = i;
 
 
-                    }
-
-                }
-                result.Clear();
-
-
-
-                if (enemy != float.MaxValue)
-                {
-                    result.Add(enemy2);
-                    Debug.Log(enemy2);
                 }
 
             }
+            result.Clear();
+
+            if (enemy != float.MaxValue)
+            {
+                result.Add(enemy2);
+                Debug.Log(enemy2);
+            }
+
             return result;
 
             ///////////////////////////////////////
