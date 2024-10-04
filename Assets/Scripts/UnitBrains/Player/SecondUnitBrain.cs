@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using Model;
 using Model.Runtime.Projectiles;
 using UnityEngine;
+using Utilities;
 using static UnityEngine.GraphicsBuffer;
 
 namespace UnitBrains.Player
@@ -13,6 +16,9 @@ namespace UnitBrains.Player
         private float _temperature = 0f;
         private float _cooldownTime = 0f;
         private bool _overheated;
+        public Vector2Int _unreacheableEnemy;
+        private List<Vector2Int> _vector2s = new List<Vector2Int>();
+        
         
         protected override void GenerateProjectiles(Vector2Int forTarget, List<BaseProjectile> intoList)
         {
@@ -31,10 +37,10 @@ namespace UnitBrains.Player
             IncreaseTemperature();
 
             for (int x = 1; x<=GetTemperature(); x++)
-                {
+            {
                     var projectile = CreateProjectile(forTarget);
                     AddProjectileToList(projectile, intoList);
-                }
+            }
 
 
 
@@ -45,40 +51,82 @@ namespace UnitBrains.Player
 
         public override Vector2Int GetNextStep()
         {
-            return base.GetNextStep();
+
+      
+            
+
+                
+                if (_vector2s.Count > 0)
+                {
+                  
+                    _unreacheableEnemy = _unreacheableEnemy.CalcNextStepTowards(_vector2s[0]);
+
+                    return _unreacheableEnemy;
+
+                }
+                else
+                {
+                    return Vector2Int.zero;
+                }
+
+            
         }
+
+
 
         protected override List<Vector2Int> SelectTargets()
         {
             ///////////////////////////////////////
             // Homework 1.4 (1st block, 4rd module)
             ///////////////////////////////////////
-            List<Vector2Int> result = GetReachableTargets();
+            List<Vector2Int> result = GetAllTargets().ToList();
+            
 
-            Vector2Int enemy2 = Vector2Int.zero;
+
+            Vector2Int closestEnemyCoordinates = Vector2Int.zero;
             float enemy = float.MaxValue;
 
-            foreach (var i in result)
+            Vector2Int enemyBase = runtimeModel.RoMap.Bases[IsPlayerUnitBrain? RuntimeModel.PlayerId : RuntimeModel.BotPlayerId];
+
+
+            if (result.Count() != 0)
             {
-                var temp = DistanceToOwnBase(i);
-                if (temp < enemy)
+                foreach (var i in result)
                 {
-                    enemy = temp;
-                    enemy2 = i;
+                    var coordinatesToBase = DistanceToOwnBase(i);
+                    if (coordinatesToBase < enemy)
+                    {
+                        enemy = coordinatesToBase;
+                        closestEnemyCoordinates = i;
 
-
+                    }
+                    
+                }
+                if (IsTargetInRange(closestEnemyCoordinates))
+                {
+                    
+                    result.Add(closestEnemyCoordinates);
+                    result.Clear();
+                    return result;
+                }
+                else
+                {
+                    _vector2s.Clear();
+                    _vector2s.Add(closestEnemyCoordinates);
+                    
+                    return _vector2s;
                 }
 
             }
-            result.Clear();
-
-            if (enemy != float.MaxValue)
+            else 
             {
-                result.Add(enemy2);
-                Debug.Log(enemy2);
+                _vector2s.Clear();
+                _vector2s.Add(enemyBase);
+                return _vector2s;
             }
 
-            return result;
+            
+
 
             ///////////////////////////////////////
         }
